@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+
+# dotenv
+.env
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+desktop.ini
+golinks.sqlite
+Thumbs.db

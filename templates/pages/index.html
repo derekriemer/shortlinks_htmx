@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+{% include partials/table.html %}
+
+<button hx-get="/add" hx-boost="true">Add Route</button>
+{% endblock %}
