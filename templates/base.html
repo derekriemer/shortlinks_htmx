@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{%block title %} {% endblock %}</title>
-    <script src="/assets/htmx.min.js"></script>
-  </head>
 
-  <body>
-  
-    <main>
+<head>
+  <meta charset="UTF-8" />
+  <title>{%block title %} {% endblock %}</title>
+  <script src="/assets/htmx.min.js"></script>
+</head>
+
+<body>
+
+  <main hx-boost="true">
     {% block main %}{% endblock %}</main>
-  </body>
+</body>
+
 </html>

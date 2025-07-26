@@ -4,7 +4,10 @@ Home
 {% endblock %}
 
 {% block main %}
-{% include partials/table.html %}
+{% include 'partials/table.html' %}
 
-<button hx-get="/add" hx-boost="true">Add Route</button>
+<button hx-get="/add" hx-target="body" hx-swap="outerHTML">
+    Add Route
+
+</button>
 {% endblock %}

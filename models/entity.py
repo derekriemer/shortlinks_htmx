@@ -1,7 +1,13 @@
 from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
-from .links import Link
+
+
+class Link(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    url: str
+
+    shortcut: list["Shortcut"] = Relationship(back_populates="link")
 
 
 class Shortcut(SQLModel, table=True):
@@ -11,4 +17,4 @@ class Shortcut(SQLModel, table=True):
     access_count: int = Field(default=0)
     last_accessed: Optional[datetime] = None
 
-    link: Optional[Link] = Relationship(back_populates="shortcuts")
+    link: Link | None = Relationship(back_populates="shortcut")

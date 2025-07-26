@@ -3,4 +3,6 @@ fastapi[standard]
 fasthx[jinja]
 jinja2
 jinja-partials
+python-multipart
 sqlmodel 
+validators
