@@ -13,7 +13,10 @@ import validators
 
 import models
 from models.entity import Shortcut
+from htmx_component_selector import HTMXComponentSelector
 from helpers import add_shortcut, delete_shortcut, edit_shortcut, find_shortcut, get_shortcuts
+from route_models import ShortcutsTable
+from api import router as api_router
 
 
 load_dotenv()
@@ -29,6 +32,8 @@ jinja_partials.register_starlette_extensions(templates)
 app = FastAPI()
 jinja = Jinja(templates)
 
+app.include_router(api_router, prefix="/api")
+
 
 if os.environ.get("LOCAL_DEV"):
     # import late to avoid production imports.
@@ -43,8 +48,16 @@ def on_startup():
 
 @app.get("/")
 @jinja.page("pages/index.html")
-def index(session: models.SessionDep) -> List[Shortcut]:
-    return session.exec(select(Shortcut)).all()
+def index(session: models.SessionDep) -> ShortcutsTable:
+    return ShortcutsTable(shortcuts=get_shortcuts(session).all(), page=0)
+
+
+@app.get("/shortcuts")
+@jinja.page(HTMXComponentSelector("pages/index.html", "partials/table.html"))
+def get_shortcuts_table(session: models.SessionDep,
+                        page: Annotated[int, Query(ge=0)] = 0,
+                        filter: Annotated[str, Query(regex=R"[a-zA-Z0-9_]*")] = "") -> ShortcutsTable:
+    return ShortcutsTable(shortcuts=get_shortcuts(session, page=page, filter=filter).all(), filter=filter, page=page)
 
 
 @app.get("/add/")
@@ -54,13 +67,13 @@ def add():
 
 
 @app.post("/add_form/")
-@jinja.hx("pages/index.html")
+@jinja.page("pages/index.html")
 def form_add(
         session: models.SessionDep,
         name: Annotated[str, Form()],
-        url: Annotated[str, Form()]) -> List[Shortcut]:
+        url: Annotated[str, Form()]) -> ShortcutsTable:
     add_shortcut(session, name, url)
-    return get_shortcuts(session).all()
+    return ShortcutsTable.get_shortcuts_table(session)
 
 
 @app.get("/edit/")
@@ -77,9 +90,9 @@ def form_edit(
         session: models.SessionDep,
         old_name: Annotated[str, Query()],
         name: Annotated[str, Form()],
-        url: Annotated[str, Form()]) -> List[Shortcut]:
+        url: Annotated[str, Form()]) -> ShortcutsTable:
     edit_shortcut(session, old_name, name, url)
-    return get_shortcuts(session).all()
+    return ShortcutsTable.get_shortcuts_table(session)
 
 
 @app.get("/delete/")

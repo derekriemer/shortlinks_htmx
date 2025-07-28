@@ -7,11 +7,20 @@ from models.entity import Link
 from models.entity import Shortcut
 
 
-def get_shortcuts(session: Session, url: Optional[str] = None):
+def get_shortcuts(session: Session, filter: str | None = None, page: int = 0):
+    if page < 0:
+        raise ValueError("Pages must start at 0")
+    print(f"Filtering for {filter} with page {page}")
     query = select(Shortcut)
-    if url:
-        query = query.where(Shortcut.link.url == url)
-    return session.exec(query)
+    if filter:
+        query = query.where(
+            Shortcut.name.like(F'%{filter}%'))
+    # Search for 1 more row than needed to enable detection of a new page.
+    # Some day, I will implement page number detection so  I can allow seeking to page
+    # 1, 2, ... k, k+1, last.
+    query = query.offset(page * 25).limit(26).order_by(Shortcut.name)
+    results = session.exec(query)
+    return results
 
 
 def find_shortcut(session: Session, name: str):
@@ -32,7 +41,8 @@ def edit_shortcut(session: Session, old_name: str, name: str, url: str):
     if not shortcut:
         raise HTTPException(status_code=404, detail="Shortcut not found")
     shortcut.name = name
-    shortcut.link.url = url
+    if shortcut.link.url != url:
+        shortcut.link = Link(url=url)
     session.add(shortcut)
     session.commit()
     session.refresh(shortcut)
