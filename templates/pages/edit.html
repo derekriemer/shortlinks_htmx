@@ -3,7 +3,7 @@
 {% block title %} Edit {{name}} {% endblock %}
 
 {% block main %}
-<form hx-post='/edit_form?old_name={{name}}'>
+<form method="post" action="/htmx/edit_form/?old_name={{name}}">
     {% include "partials/link_form.html" %}
 </form>
 {% endblock %}

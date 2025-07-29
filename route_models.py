@@ -15,3 +15,8 @@ class ShortcutsTable(BaseModel):
     # pylint: disable=W0622
     def get_shortcuts_table(cls, session: Session, page: int = 0, filter: str = "") -> ShortcutsTable:
         return ShortcutsTable(shortcuts=get_shortcuts(session, page=page, filter=filter), page=page, filter=filter)
+
+
+class SingleShortcutPayload(BaseModel):
+    name: str = Field()
+    shortcut: Shortcut | None = Field()

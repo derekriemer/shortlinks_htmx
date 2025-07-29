@@ -3,6 +3,6 @@
 {% block title %} Add Link{% endblock %}
 
 {% block main %}
-<form hx-post="/add_form/" />
+<form method="post" action="/htmx/add_form/" />
 {% include "partials/link_form.html" %} </form>
 {% endblock %}

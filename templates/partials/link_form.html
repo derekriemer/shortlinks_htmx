@@ -1,9 +1,10 @@
 <label for="name">
     Name
 </label>
-<input id="name" name="name" type="text" placeholder="Shortcut Name here" {% if name %} value="{{name}}" {% endif %} />
+<input id="name" name="name" type="text" placeholder="Shortcut Name here" {% if shortcut %} value="{{shortcut.name}}" {%
+    endif %} />
 <label for="url">
     URL
 </label>
-<input type="text" id="url" name="url" {% if link %} value="link.url" {% endif %} />
+<input type="text" id="url" name="url" {% if shortcut and shortcut.link %} value="{{shortcut.link.url}}" {% endif %} />
 <input type="submit" />

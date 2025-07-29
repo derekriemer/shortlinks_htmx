@@ -1,14 +1,16 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Query, Form
+from fastapi import APIRouter, Form, Query, status
+from fastapi.responses import RedirectResponse
 from fasthx import Jinja
-from fastx_globals import get_or_init_fastx
 
-from htmx_component_selector import HTMXComponentSelector
-from route_models import ShortcutsTable
-from models.entity import Shortcut
 import models
-from helpers import add_shortcut, delete_shortcut, edit_shortcut, find_shortcut, get_shortcuts
+from fastx_globals import get_or_init_fastx
+from helpers import (add_shortcut, delete_shortcut, edit_shortcut,
+                     find_shortcut, get_shortcuts)
+from htmx_component_selector import HTMXComponentSelector
+from models.entity import Shortcut
+from route_models import ShortcutsTable, SingleShortcutPayload
 
 router = APIRouter()
 jinja = get_or_init_fastx()
@@ -29,32 +31,33 @@ async def add():
 
 
 @router.post("/add_form/")
-@jinja.page("pages/index.html")
 async def form_add(
-    session: models.SessionDep,
+        session: models.SessionDep,
         name: Annotated[str, Form()],
-        url: Annotated[str, Form()]) -> ShortcutsTable:
-    add_shortcut(session, name, url)
-    return ShortcutsTable.get_shortcuts_table(session)
+        url: Annotated[str, Form()]) -> RedirectResponse:
+    try:
+        add_shortcut(session, name, url)
+    except ValueError:
+
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/edit/")
 @jinja.page("pages/edit.html")
-async def edit(session: models.SessionDep, name: Annotated[str, Query()]) -> Shortcut:
-    return find_shortcut(session, name)
+async def edit(session: models.SessionDep, name: Annotated[str, Query()]) -> SingleShortcutPayload:
+    return SingleShortcutPayload(shortcut=find_shortcut(session, name), name=name)
 
 
 # fixme: pydantic.AfterValidator in the annotation to catch urls.
 # I can't be arsed right now to write an exception converter.
 @router.post("/edit_form/")
-@jinja.page("pages/index.html")
 async def form_edit(
         session: models.SessionDep,
         old_name: Annotated[str, Query()],
         name: Annotated[str, Form()],
-        url: Annotated[str, Form()]) -> ShortcutsTable:
+        url: Annotated[str, Form()]) -> RedirectResponse:
     edit_shortcut(session, old_name, name, url)
-    return ShortcutsTable.get_shortcuts_table(session)
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 # no fastx decoration, this endpoint uses status alone to communicate.
