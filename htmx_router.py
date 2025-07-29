@@ -18,8 +18,8 @@ jinja = get_or_init_fastx()
 @jinja.page(HTMXComponentSelector("pages/index.html", "partials/table.html"))
 async def get_shortcuts_table(session: models.SessionDep,
                               page: Annotated[int, Query(ge=0)] = 0,
-                              filter: Annotated[str, Query(regex=R"[a-zA-Z0-9_]*")] = "") -> ShortcutsTable:
-    return ShortcutsTable(shortcuts=get_shortcuts(session, page=page, filter=filter).all(), filter=filter, page=page)
+                              shortcut_filter: Annotated[str, Query(regex=r"[a-zA-Z0-9_]*")] = "") -> ShortcutsTable:
+    return ShortcutsTable(shortcuts=get_shortcuts(session, page=page, filter=shortcut_filter).all(), filter=shortcut_filter, page=page)
 
 
 @router.get("/add/")
@@ -47,7 +47,7 @@ async def edit(session: models.SessionDep, name: Annotated[str, Query()]) -> Sho
 # fixme: pydantic.AfterValidator in the annotation to catch urls.
 # I can't be arsed right now to write an exception converter.
 @router.post("/edit_form/")
-@jinja.hx("pages/index.html")
+@jinja.page("pages/index.html")
 async def form_edit(
         session: models.SessionDep,
         old_name: Annotated[str, Query()],
