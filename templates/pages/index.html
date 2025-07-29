@@ -7,7 +7,7 @@ Home
 {{render_partial('partials/filter.html')}}
 {{ render_partial('partials/table.html', page=page, shortcuts=shortcuts, filter=filter) }}
 
-<button hx-get="/add" hx-target="body" hx-swap="outerHTML">
+<button hx-get="/htmx/add" hx-target="body" hx-swap="outerHTML">
     Add Route
 
 </button>

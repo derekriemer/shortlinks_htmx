@@ -14,17 +14,17 @@ router = APIRouter()
 
 
 @router.get("/shortcuts")
-def shortcuts(session: models.SessionDep) -> List[Shortcut]:
+async def shortcuts(session: models.SessionDep) -> List[Shortcut]:
     return get_shortcuts(session).all()
 
 
 @router.get("/shortcut/{name}")
-def get_shortcut(session: models.SessionDep, name: Annotated[Optional[str], Path()]) -> List[Shortcut]:
+async def get_shortcut(session: models.SessionDep, name: Annotated[Optional[str], Path()]) -> List[Shortcut]:
     return find_shortcut(session, name)
 
 
 @router.post("/add")
-def add(
+async def add(
         session: models.SessionDep,
         name: str,
         url: Annotated[str, Query()]) -> Shortcut:
@@ -33,13 +33,13 @@ def add(
 
 
 @router.put("/edit/")
-def edit(session: models.SessionDep,
-         old_name: Annotated[str, Query()],
-         name: Annotated[str, Query()],
-         url: Annotated[str, Query(), AfterValidator(validate_url)]) -> Shortcut:
+async def edit(session: models.SessionDep,
+               old_name: Annotated[str, Query()],
+               name: Annotated[str, Query()],
+               url: Annotated[str, Query(), AfterValidator(validate_url)]) -> Shortcut:
     return edit_shortcut(session, old_name, name, url)
 
 
 @router.delete("/delete/")
-def delete(session: models.SessionDep, name: Annotated[str, Query()]) -> None:
+async def delete(session: models.SessionDep, name: Annotated[str, Query()]) -> None:
     delete_shortcut(session, name)

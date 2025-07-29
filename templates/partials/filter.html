@@ -1,5 +1,5 @@
 <label for="filter-input">
     Filter
 </label>
-<input type="text" name="filter" placeholder="Filter" hx-get="/shortcuts"
+<input type="text" name="filter" placeholder="Filter" id="filter-input" hx-get="/htmx/shortcuts"
     hx-trigger="input changed delay:500ms, keyup[key=='Enter']" hx-target="#link-table" hx-swap="outerHTML">
