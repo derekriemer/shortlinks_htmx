@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title> Add Link</title>
+  <script src="/assets/htmx.min.js"></script>
+</head>
+
+<body>
+
+  <main hx-boost="true">
+    
+<form hx-post="/add_form/" />
+<label for="name">
+    Name
+</label>
+<input id="name" name="name" type="text" placeholder="Shortcut Name here"  />
+<label for="url">
+    URL
+</label>
+<input type="text" id="url" name="url"  />
+<input type="submit" /> </form>
+</main>
+</body>
+
+</html>

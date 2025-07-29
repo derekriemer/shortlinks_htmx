@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>
+Home
+</title>
+  <script src="/assets/htmx.min.js"></script>
+</head>
+
+<body>
+
+  <main hx-boost="true">
+    
+<label for="filter-input">
+    Filter
+</label>
+<input type="text" name="filter" placeholder="Filter" id="filter-input" hx-get="/htmx/shortcuts"
+    hx-trigger="input changed delay:500ms, keyup[key=='Enter']" hx-target="#link-table" hx-swap="outerHTML">
+
+<div id="link-table">
+    
+
+    <table>
+        <thead>
+            <tr>
+                <th>shortcut</th>
+                <th>Url</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <th>
+                    example
+                </th>
+                <td>
+                    https://example.com
+                </td>
+                <td>
+                    <a href="/htmx/edit?name=example">
+                        Edit
+                    </a>
+                    <a href="/htmx/delete?name=example"
+                        hx-confirm=" Are you sure you want to delete this shortcut?" , hx-target="closest tr"
+                        hx-swap="delete">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            
+            <tr>
+                <th>
+                    me
+                </th>
+                <td>
+                    https://derekriemer.com
+                </td>
+                <td>
+                    <a href="/htmx/edit?name=me">
+                        Edit
+                    </a>
+                    <a href="/htmx/delete?name=me"
+                        hx-confirm=" Are you sure you want to delete this shortcut?" , hx-target="closest tr"
+                        hx-swap="delete">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+    
+</div>
+
+<button hx-get="/htmx/add" hx-target="body" hx-swap="outerHTML">
+    Add Route
+
+</button>
+</main>
+</body>
+
+</html>

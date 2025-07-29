@@ -10,7 +10,6 @@ from models.entity import Shortcut
 def get_shortcuts(session: Session, filter: str | None = None, page: int = 0):
     if page < 0:
         raise ValueError("Pages must start at 0")
-    print(f"Filtering for {filter} with page {page}")
     query = select(Shortcut)
     if filter:
         query = query.where(

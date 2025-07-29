@@ -1,8 +1,12 @@
+approvaltests 
+
 dotenv
 fastapi[standard]
 fasthx[jinja]
 jinja2
 jinja-partials
+pytest
+pytest-approvaltests
 python-multipart
 sqlmodel 
 validators
